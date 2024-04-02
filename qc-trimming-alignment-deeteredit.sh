@@ -13,8 +13,9 @@
 #QUESTION: ntasks appropriate amount? cpus per task? 
 
 
-sample= $(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/med68205/TRANS_CLOCK_PROCESSING/RawFastQC/sample names)
-#QUESTION: Are these just for the sample names? 
+sample= $(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/med68205/TRANS_CLOCK_PROCESSING/RawFastQC) #?: original code had /sample names as the end
+#QUESTION: Are these just for the sample names? Right now I have all the raw data under the above file path with each sample as its own folder. 
+#In each sample folder, there are the forward and reverse reads for each. 
 
 #Make project directory + make directory for reference genome
 OUTDIR="/scratch/med68205/TRANS_CLOCK_PROCESSING" #QUESTION: Is this for the alignment portion or is this for everything? (QC, trimming, alignment)?
@@ -22,7 +23,7 @@ OUTDIR="/scratch/med68205/TRANS_CLOCK_PROCESSING" #QUESTION: Is this for the ali
 if [ ! -d $OUTDIR/Genome ]
 then
     echo 'There is no genome folder.'
-fi 
+fi
 
 echo
 echo "************************          BEGIN PIPELINE          ************************"
@@ -61,5 +62,5 @@ echo
 echo 'directory created.'
 echo 
 
-#fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/Raw/${sample}/*gz
+#fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/Raw/${sample}/*.gz
 
