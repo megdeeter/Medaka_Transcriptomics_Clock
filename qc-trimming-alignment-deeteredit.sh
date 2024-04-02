@@ -62,5 +62,5 @@ echo
 echo 'directory created.'
 echo 
 
-#fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/Raw/${sample}/*.gz
+#fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/RawFastQC/${sample}/*.gz
 
