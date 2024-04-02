@@ -13,7 +13,7 @@
 #QUESTION 1: ntasks appropriate amount? cpus per task? SEE NOTES FOLDER
 
 
-sample= $(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/med68205/TRANS_CLOCK/usftp21.novogene.com/01.RawData/sample.names) #for each of the 85 samples
+sample=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/med68205/TRANS_CLOCK/usftp21.novogene.com/01.RawData/sample.names) #for each of the 85 samples
 
 
 #Make project directory + make directory for reference genome
