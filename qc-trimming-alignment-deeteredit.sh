@@ -18,7 +18,9 @@ sample= $(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/med68205/TRANS_CLOCK_PROCESS
 #In each sample folder, there are the forward and reverse reads for each. 
 
 #Make project directory + make directory for reference genome
-OUTDIR="/scratch/med68205/TRANS_CLOCK_PROCESSING" #QUESTION: Is this for the alignment portion or is this for everything? (QC, trimming, alignment)?
+OUTDIR="/scratch/med68205/TRANS_CLOCK_PROCESSING" 
+#QUESTION: Is this for the alignment portion or is this for everything? (QC, trimming, alignment)?
+#QUESTION: Where do you put the directory for the reference genome?
 
 if [ ! -d $OUTDIR/Genome ]
 then
@@ -61,6 +63,5 @@ fi
 echo
 echo 'directory created.'
 echo 
-
-#fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/RawFastQC/${sample}/*.gz
+fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/RawFastQC/${sample}/*.gz
 
