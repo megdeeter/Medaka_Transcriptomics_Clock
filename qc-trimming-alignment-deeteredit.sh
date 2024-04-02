@@ -13,7 +13,7 @@
 #QUESTION: ntasks appropriate amount? cpus per task? 
 
 
-sample= $(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/med68205/TRANS_CLOCK_PROCESSING/RawFastQC) #?: original code had /sample names as the end
+sample= $(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/med68205/TRANS_CLOCK_PROCESSING/Data) #?: original code had /sample names as the end
 #QUESTION: Are these just for the sample names? Right now I have all the raw data under the above file path with each sample as its own folder. 
 #In each sample folder, there are the forward and reverse reads for each. 
 
