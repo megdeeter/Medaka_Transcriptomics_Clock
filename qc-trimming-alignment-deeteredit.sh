@@ -5,22 +5,20 @@
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=300G
 #SBATCH --time=72:00:00
-#SBATCH --output=/scratch/med68205/TRANS_CLOCK_PROCESSING/TRANS_CLOCK_QC/Logs
+#SBATCH --output=/scratch/med68205/TRANS_CLOCK_PROCESSING/RawFastQC/Logs/log.%j
 #SBATCH --mail-user=med68205@uga.edu
 #SBATCH --mail-type=END,FAIL
-#SBATCH --array=1-50 
+#SBATCH --array=1-85 
 
-#QUESTION: ntasks appropriate amount? cpus per task? 
+#QUESTION 1: ntasks appropriate amount? cpus per task? SEE NOTES FOLDER
 
 
-sample= $(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/med68205/TRANS_CLOCK_PROCESSING/Data) #?: original code had /sample names as the end
-#QUESTION: Are these just for the sample names? Right now I have all the raw data under the above file path with each sample as its own folder. 
-#In each sample folder, there are the forward and reverse reads for each. 
+sample= $(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/med68205/TRANS_CLOCK/usftp21.novogene.com/01.RawData/sample.names) #for each of the 85 samples
+
 
 #Make project directory + make directory for reference genome
+#Set directory to your master directory that everything is in 
 OUTDIR="/scratch/med68205/TRANS_CLOCK_PROCESSING" 
-#QUESTION: Is this for the alignment portion or is this for everything? (QC, trimming, alignment)?
-#QUESTION: Where do you put the directory for the reference genome?
 
 if [ ! -d $OUTDIR/Genome ]
 then
@@ -33,7 +31,7 @@ echo
 
 date
 
-echo 'Project directory = ' $OUTDIR
+echo 'Project directory = ' $OUTDIR/RawFastQC
 echo
 echo 'Sample: ' $sample
 echo
@@ -51,17 +49,7 @@ echo
 echo 'loading modules complete'
 echo
 
-#Create directory for raw read fastqc files
-echo
-echo 'Creating directory for raw read QC...'
-echo
 
-if [ ! -d $OUTDIR/RawFastQC/Logs ]
-then
-    mkdir -p $OUTDIR/RawFastQC/Logs
-fi
-echo
-echo 'directory created.'
-echo 
-fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/RawFastQC/${sample}/*.gz
+fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/${sample}/*.gz
+
 
