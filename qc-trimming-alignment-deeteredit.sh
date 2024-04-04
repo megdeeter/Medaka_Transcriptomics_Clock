@@ -52,5 +52,8 @@ echo
 
 fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/${sample}/*.gz
 
+#load MultiQC
+ml MultiQC/1.14-foss-2022a
+
 #multiqc
 multiqc -o $OUTDIR/RawFastQC/MultiQC $OUTDIR/RawFastQC/Logs/*fastqc.zip
