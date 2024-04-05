@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=TRANS_QC
+#SBATCH --job-name=Trimming_FastQCTrimmedReads
 #SBATCH --partition=highmem_p
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=10
+#SBATCH --cpus-per-task=4
 #SBATCH --mem=300G
 #SBATCH --time=72:00:00
 #SBATCH --output=/scratch/med68205/TRANS_CLOCK_PROCESSING/RawFastQC/Logs/log.%j
@@ -37,22 +37,19 @@ echo
 echo 'Loading relevant modules'
 echo
 
-#load FastQC
+#load FastQC and MultiQC
 ml FastQC/0.11.9-Java-11
-
+ml MultiQC/1.14-foss-2022a
 
 echo 
 echo 'loading modules complete'
 echo
 
-
+##fastqc Raw Reads
 ##fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/${sample}/*.gz
 
-#load MultiQC
-ml MultiQC/1.14-foss-2022a
-
-#multiqc
-#multiqc -o $OUTDIR/RawFastQC/MultiQC $OUTDIR/RawFastQC/Logs/*fastqc.zip
+##multiqc Raw Reads
+##multiqc -o $OUTDIR/RawFastQC/MultiQC $OUTDIR/RawFastQC/Logs/*fastqc.zip
 
 echo 
 echo 'Load modules for trimming...'
@@ -69,7 +66,7 @@ echo
 echo 'Trimming raw reads and performing FastQC...'
 echo
 
-#trim_galore --cores 4 --fastqc --fastqc_args "--outdir $OUTDIR/TrimmedQC" -stringency 3 -o $OUTDIR/TrimmedReads --paired $OUTDIR/Data/${sample}/${sample}_1.fq.gz $OUTDIR/Data/${sample}/${sample}_2.fq.gz
+trim_galore --cores 4 --fastqc --fastqc_args "--outdir $OUTDIR/TrimmedQC" -stringency 3 -o $OUTDIR/TrimmedReads --paired $OUTDIR/Data/${sample}/${sample}_1.fq.gz $OUTDIR/Data/${sample}/${sample}_2.fq.gz
 fastqc -o $OUTDIR/TrimmedQC -t 10 $OUTDIR/TrimmedReads/*.gz
 
 echo
@@ -80,7 +77,7 @@ echo
 echo 'Concatenate all FastQC files using MultiQC...'
 echo
 
-multiqc /$OUTDIR/TrimmedQC
+multiqc -o $OUTDIR/TrimmedMultiQC $OUTDIR/TrimmedQC/*fastqc.zip
 
 date
 
