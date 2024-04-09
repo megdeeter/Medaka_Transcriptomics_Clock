@@ -2,7 +2,7 @@
 #SBATCH --job-name=Trimming_FastQCTrimmedReads
 #SBATCH --partition=highmem_p
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=10
 #SBATCH --mem=300G
 #SBATCH --time=72:00:00
 #SBATCH --output=/scratch/med68205/TRANS_CLOCK_PROCESSING/RawFastQC/Logs/log.%j
@@ -26,24 +26,24 @@ echo
 
 date
 
-echo 'Project directory = ' $OUTDIR/RawFastQC
-echo
+echo 'Project directory = ' $OUTDIR
+#echo
 echo 'Sample: ' $sample
-echo
-echo 'Raw FastQC'
+#echo
+#echo 'Raw FastQC'
 
 ##load modules for downloading/trimming experiment reads and alignment
-echo
-echo 'Loading relevant modules'
-echo
+#echo
+#echo 'Loading relevant modules'
+#echo
 
 #load FastQC and MultiQC
-ml FastQC/0.11.9-Java-11
-ml MultiQC/1.14-foss-2022a
+#ml FastQC/0.11.9-Java-11
+#ml MultiQC/1.14-foss-2022a
 
-echo 
-echo 'loading modules complete'
-echo
+#echo 
+#echo 'loading modules complete'
+#echo
 
 ##fastqc Raw Reads
 ##fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/${sample}/*.gz
@@ -51,35 +51,54 @@ echo
 ##multiqc Raw Reads
 ##multiqc -o $OUTDIR/RawFastQC/MultiQC $OUTDIR/RawFastQC/Logs/*fastqc.zip
 
-echo 
-echo 'Load modules for trimming...'
-echo
+#echo 
+#echo 'Load modules for trimming...'
+#echo
 
-ml Trim_Galore/0.6.7-GCCcore-11.2.0
-ml Python/3.10.8-GCCcore-12.2.0
-ml pigz/2.7-GCCcore-11.3.0
-ml cutadapt/4.5-GCCcore-11.3.0
+#ml Trim_Galore/0.6.7-GCCcore-11.2.0
+#ml Python/3.10.8-GCCcore-12.2.0
+#ml pigz/2.7-GCCcore-11.3.0
+#ml cutadapt/4.5-GCCcore-11.3.0
 
 ##trim raw reads
 
+#echo
+#echo 'Trimming raw reads and performing FastQC...'
+#echo
+
+#trim_galore --cores 4 --fastqc --fastqc_args "--outdir $OUTDIR/TrimmedQC" -stringency 3 -o $OUTDIR/TrimmedReads --paired $OUTDIR/Data/${sample}/${sample}_1.fq.gz $OUTDIR/Data/${sample}/${sample}_2.fq.gz
+#fastqc -o $OUTDIR/TrimmedQC -t 10 $OUTDIR/TrimmedReads/*.gz
+
+#echo
+#echo 'trimming complete.'
+#echo
+
+#echo
+#echo 'Concatenate all FastQC files using MultiQC...'
+#echo
+
+#multiqc -o $OUTDIR/TrimmedMultiQC $OUTDIR/TrimmedQC/*fastqc.zip
+
+#date
+
+#Align reads to reference genome
+
 echo
-echo 'Trimming raw reads and performing FastQC...'
+echo "*********** Begin alignment ***********"
 echo
 
-trim_galore --cores 4 --fastqc --fastqc_args "--outdir $OUTDIR/TrimmedQC" -stringency 3 -o $OUTDIR/TrimmedReads --paired $OUTDIR/Data/${sample}/${sample}_1.fq.gz $OUTDIR/Data/${sample}/${sample}_2.fq.gz
-fastqc -o $OUTDIR/TrimmedQC -t 10 $OUTDIR/TrimmedReads/*.gz
-
 echo
-echo 'trimming complete.'
+echo 'Loading modules'
 echo
 
-echo
-echo 'Concatenate all FastQC files using MultiQC...'
-echo
+ml HISAT2/3n-20201216-gompi-2022a
+ml SAMtools/1.16.1-GCC-11.3.0
 
-multiqc -o $OUTDIR/TrimmedMultiQC $OUTDIR/TrimmedQC/*fastqc.zip
+echo 'Alignment directories made manually'
+echo 'Begin aligning...'
 
-date
+hisat2 -x $OUTDIR/Alignment/HISAT2/Genome_Index/Index/ -p 10 --rna-strandness FR --dta -q -1 $OUTDIR/TrimmedReads/${sample}_1_val_1.fq.gz -2 $OUTDIR/TrimmedReads/${sample}_2_val_2.fq.gz -S $OUTDIR/Alignment/HISAT2/SAM/${sample}.sam --summary-file /$OUTDIR/MEVE/Alignment/HISAT2/Stats/${sample}_HISAT2_alignment_summary
+
 
 
 
