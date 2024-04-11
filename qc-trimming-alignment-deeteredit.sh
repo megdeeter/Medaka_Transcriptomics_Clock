@@ -81,23 +81,61 @@ echo 'Sample: ' $sample
 
 #date
 
-#Align reads to reference genome
+#echo
+#echo "************************          Generate genome index          ************************"
+#echo
 
-echo
-echo "*********** Begin alignment ***********"
-echo
+#!/bin/bash
 
-echo
-echo 'Loading modules'
-echo
+#SBATCH --job-name=IndexSTAR
+#SBATCH --mem=32GB
+#SBATCH --cpus-per-task=8
+#SBATCH --partition=batch
+#SBATCH --ntasks=1
+#SBATCH --time=7:00:00
+#SBATCH --output=/scratch/med68205/TRANS_CLOCK_PROCESSING/Alignment/HISAT2/GenomeAssembly/Index/Log
 
-ml HISAT2/3n-20201216-gompi-2022a
-ml SAMtools/1.16.1-GCC-11.3.0
 
-echo 'Alignment directories made manually'
-echo 'Begin aligning...'
+#ml STAR/2.7.10b-GCC-11.3.0
 
-hisat2 -x $OUTDIR/Alignment/HISAT2/Genome_Index/Index/ -p 10 --rna-strandness FR --dta -q -1 $OUTDIR/TrimmedReads/${sample}_1_val_1.fq.gz -2 $OUTDIR/TrimmedReads/${sample}_2_val_2.fq.gz -S $OUTDIR/Alignment/HISAT2/SAM/${sample}.sam --summary-file /$OUTDIR/MEVE/Alignment/HISAT2/Stats/${sample}_HISAT2_alignment_summary
+#OUTDIR="/scratch/med68205/TRANS_CLOCK_PROCESSING/Alignment/HISAT2/GenomeAssembly" 
+#STAR --runThreadN 8\
+ #--runMode genomeGenerate\
+ #--genomeDir $OUTDIR/Index\
+ #--genomeFastaFiles $OUTDIR/GCF_002234675.1_ASM223467v1_genomic.fna\
+ #--sjdbGTFfile $OUTDIR/genomic.gtf\
+ #--genomeSAindexNbases 13\
+ #--sjdbOverhang 149
+
+#echo
+#echo "************************          Begin Alignment          ************************"
+#echo
+
+
+#!/bin/bash
+
+#SBATCH --job-name=AlignSTAR
+#SBATCH --mail-user=med68205@uga.edu
+#SBATCH --mail-type=END,FAIL
+#SBATCH --mem=40GB
+#SBATCH --cpus-per-task=8
+#SBATCH --partition=batch
+#SBATCH --ntasks=1
+#SBATCH --time=72:00:00
+#SBATCH --output=/scratch/med68205/TRANS_CLOCK_PROCESSING/Alignment/HISAT2/GenomeAssembly/STAR_Results/Log
+
+#ml STAR/2.7.10b-GCC-11.3.0
+
+#OUTDIR="/scratch/med68205/TRANS_CLOCK_PROCESSING/Alignment/HISAT2/GenomeAssembly"
+#sample=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/med68205/TRANS_CLOCK_PROCESSING/TrimmedReads/sample.names)
+
+#STAR --runThreadN 8\
+ #--runMode alignReads\
+ #--genomeDir $OUTDIR/Index\
+ #--readFilesIn  /scratch/med68205/TRANS_CLOCK_PROCESSING/TrimmedReads/*${sample}_1_val_1.fq.gz  /scratch/med68205/TRANS_CLOCK_PROCESSING/TrimmedReads/*${sample}_2_val_2.fq.gz\
+ #--outSAMtype BAM SortedByCoordinate\
+ #--quantMode GeneCounts\
+ #--outFileNamePrefix alignments_STAR/
 
 
 
