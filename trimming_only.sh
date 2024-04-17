@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=300G
 #SBATCH --time=72:00:00
-#SBATCH --output=/scratch/med68205/TRANS_CLOCK_PROCESSING/RawFastQC/Logs/log.%j
+#SBATCH --output=/scratch/med68205/TRANS_CLOCK_PROCESSING/Alignment/STAR/GenomeAssembly2/TrimmedReads2/Logs/log.%j
 #SBATCH --mail-user=med68205@uga.edu
 #SBATCH --mail-type=END,FAIL
 #SBATCH --array=1-85 
@@ -55,10 +55,10 @@ ml MultiQC/1.14-foss-2022a
 #echo 'Load modules for trimming...'
 #echo
 
-#ml Trim_Galore/0.6.7-GCCcore-11.2.0
-#ml Python/3.10.8-GCCcore-12.2.0
-#ml pigz/2.7-GCCcore-11.3.0
-#ml cutadapt/4.5-GCCcore-11.3.0
+ml Trim_Galore/0.6.7-GCCcore-11.2.0
+ml Python/3.10.8-GCCcore-12.2.0
+ml pigz/2.7-GCCcore-11.3.0
+ml cutadapt/4.5-GCCcore-11.3.0
 
 ##trim raw reads
 
@@ -66,12 +66,15 @@ ml MultiQC/1.14-foss-2022a
 #echo 'Trimming raw reads and performing FastQC...'
 #echo
 
-#trim_galore --cores 4 --fastqc --fastqc_args "--outdir $OUTDIR/TrimmedQC" -stringency 3 -o $OUTDIR/TrimmedReads --paired $OUTDIR/Data/${sample}/${sample}_1.fq.gz $OUTDIR/Data/${sample}/${sample}_2.fq.gz
-#fastqc -o $OUTDIR/TrimmedQC -t 10 $OUTDIR/TrimmedReads/*.gz
+#trim_galore --cores 4 --fastqc --fastqc_args "--outdir $OUTDIR/Alignment/STAR/GenomeAssembly2/TrimmedReads2/TrimmedQC" -stringency 3 -o $OUTDIR/Alignment/STAR/GenomeAssembly2/TrimmedReads2 --paired $OUTDIR/Data/${sample}/${sample}_1.fq.gz $OUTDIR/Data/${sample}/${sample}_2.fq.gz
+fastqc -o $OUTDIR/Alignment/STAR/GenomeAssembly2/TrimmedReads2/TrimmedQC -t 10 $OUTDIR/Alignment/STAR/GenomeAssembly2/TrimmedReads2/*.gz
 
 #echo
 #echo 'trimming complete.'
 #echo
+
+#unzip TrimmedReads
+
 
 #echo
 #echo 'Concatenate all FastQC files using MultiQC...'
