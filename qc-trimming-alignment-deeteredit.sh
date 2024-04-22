@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=TrimmingOnly
+#SBATCH --job-name=FastQC
 #SBATCH --partition=highmem_p
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=10
@@ -46,10 +46,10 @@ ml MultiQC/1.14-foss-2022a
 #echo
 
 ##fastqc Raw Reads
-##fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/${sample}/*.gz
+fastqc -o $OUTDIR/RawFastQC/Logs -t 10 $OUTDIR/Data/${sample}/*.gz
 
 ##multiqc Raw Reads
-##multiqc -o $OUTDIR/RawFastQC/MultiQC $OUTDIR/RawFastQC/Logs/*fastqc.zip
+multiqc -o $OUTDIR/RawFastQC/MultiQC $OUTDIR/RawFastQC/Logs/*fastqc.zip
 
 #echo 
 #echo 'Load modules for trimming...'
