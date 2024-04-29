@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=FastQC
+#SBATCH --job-name=RNAseq_alignment
 #SBATCH --partition=highmem_p
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=10
