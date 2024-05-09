@@ -7,7 +7,7 @@
 #SBATCH --time=48:00:00
 #SBATCH --output=/scratch/med68205/transclock/log/Rlog/log.%j
 #SBATCH --mail-user=med68205@uga.edu
-#SBATCH --mail-type=BEGIN, END, FAIL
+#SBATCH --mail-type=END,FAIL
 
 cd /scratch/med68205/transclock/log/Rlog #specifies folder where R log files go
 
