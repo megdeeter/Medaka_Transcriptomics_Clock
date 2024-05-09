@@ -11,7 +11,7 @@
 
 cd /scratch/med68205/transclock/log/Rlog #specifies folder where R log files go
 
-ml R/4.3.1-foss-2022a #load the version of R you are using
+ml R/4.3.2-foss-2022b #load the version of R you are using
 
 export R_LIBS=/home/med68205/R/x86_64-pc-linux-gnu-library/4.3 #path to where R packages/libraries are installed
 
