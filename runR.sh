@@ -5,7 +5,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=300G
 #SBATCH --time=48:00:00
-#SBATCH --output=/scratch/med68205/transclock/log/Rlog/log.%j
+#SBATCH --output=/scratch/med68205/transclock/log/batchlog/log.%j
 #SBATCH --mail-user=med68205@uga.edu
 #SBATCH --mail-type=END,FAIL
 
